@@ -1,0 +1,140 @@
+<?php
+    echo $this->headScript()->appendFile($this->basePath() . '/js/calendar.js');
+    $hoursInDay = array(
+        '12:00 AM', 
+        '1:00 AM', 
+        '2:00 AM', 
+        '3:00 AM', 
+        '4:00 AM', 
+        '5:00 AM', 
+        '6:00 AM', 
+        '7:00 AM', 
+        '8:00 AM', 
+        '9:00 AM', 
+        '10:00 AM', 
+        '11:00 AM',
+        '12:00 PM',
+        '1:00 PM',
+        '2:00 PM',
+        '3:00 PM',
+        '4:00 PM',
+        '5:00 PM',
+        '6:00 PM',
+        '7:00 PM',
+        '8:00 PM',
+        '9:00 PM',
+        '10:00 PM',
+        '11:00 PM',
+    );
+?>
+
+<?php 
+    $daysInNumber = array('Sun' => 0, 'Mon' => 1, 'Tue' => 2, 'Wed' => 3, 'Thu' => 4, 'Fri' => 5, 'Sat' => 6);
+    $daysInMonth = $this->daysInMonth;
+    $numberOfWeeks = ceil($daysInMonth / 7); 
+    $firstDayOfMonth = $this->firstDayOfCurrentMonth;
+    $dayIndex = $daysInNumber[$firstDayOfMonth];
+    $today = $this->day;
+?>
+
+<h1 class="page-heading">CALENDAR</h1>
+
+<div class="calendar-toolbar">
+    <div class="left-toolbar">
+        <div class="arrow-buttons">
+            <button type="button" class="calendar-button left" id="back"><span class="fa fa-arrow-left"></span></button>
+            <button type="button" class="calendar-button right" id="forward"><span class="fa fa-arrow-right"></span></button>    
+        </div>
+        <button type="button" class="calendar-button today-button">current</button>
+    </div>
+    <div class="center-toolbar"><?php echo $this->month . ' ' . $this->year; ?></div>
+    <div class="right-toolbar">
+    <div class="arrow-buttons">
+            <button type="button" class="calendar-button left" id="monthly-button">month</button>
+            <button type="button" class="calendar-button right" id="weekly-button">week</button>
+            <button type="button" class="calendar-button right" id="daily-button">day</button>        
+            </div>
+    </div>
+
+</div>
+<div class="calendar-container">
+    <div class="monthly-view">
+        <table class="weekly-table">
+            <thead>
+                <tr>
+                    <th class="day" width="15%">Sun</th>
+                    <th class="day" width="14%">Mon</th>
+                    <th class="day" width="14%">Tue</th>
+                    <th class="day" width="14%">Wed</th>
+                    <th class="day" width="14%">Thu</th>
+                    <th class="day" width="14%">Fri</th>
+                    <th class="day" width="15%">Sat</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                    $day = 1;
+                        for ($i = 0; $i < $numberOfWeeks + 1; $i++) {
+                            echo '<tr>';
+                            for($j = 0; $j <= 6; $j++) {
+                                if ($day == $today) {
+                                    echo '<td class="day-cont current-day">';
+                                } else {
+                                    echo '<td class="day-cont">';
+                                }
+                                if ($day <= $daysInMonth && ($i > 0 || $j >= $dayIndex)) {
+                                    echo '<span>' . $day . '</span>';
+                                    foreach($this->jobs as $job) {
+                                        if($job['day'] == $day) {
+                                            echo '<a href="jobs/details/' . $job['job_code'] . '"><div class="job-scheduled">' . $job['calendar_details'] . '</div></a>';
+                                        }
+                                    }
+                                    $day += 1;
+                                }
+                                echo '</td>';
+                            }
+                            echo '</tr>';
+                        }
+                ?>
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="daily-view">
+    <table class="daily-table">
+            <thead>
+                <tr>
+                    <th width="20%">Hour</th>
+                    <th width="80%" id="day-daily-view">Day</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+    </table>
+    </div>
+    
+    <div class="weekly-view">
+    <table class="weekly-table-view">
+            <thead>
+                <tr>
+                    <th class="week" width="9%">Hour</th>
+                    <th class="week" width="13%" id="week_1">Sun</th>
+                    <th class="week" width="13%" id="week_2">Mon</th>
+                    <th class="week" width="13%" id="week_3">Tue</th>
+                    <th class="week" width="13%" id="week_4">Wed</th>
+                    <th class="week" width="13%" id="week_5">Thu</th>
+                    <th class="week" width="13%" id="week_6">Fri</th>
+                    <th class="week" width="13%" id="week_7">Sat</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+    </table>
+    </div>
+</div>
+
+<input type="hidden" id="day" autocomplete="off" value="<?php echo $this->day; ?>">
+<input type="hidden" id="month" autocomplete="off" value="<?php echo $this->monthNumber; ?>">
+<input type="hidden" id="year" autocomplete="off" value="<?php echo $this->year; ?>">
+<input type="hidden" id="current-view" autocomplete="off" value="monthly-view">
+
